@@ -1,5 +1,5 @@
 # myfisher23
-# Fisher's Exact Probability Test on 2x3 matrix.<br/>
+Fisher's Exact Probability Test on 2x3 matrix.<br/>
 Fisher's exact test of 2x3 contingency tables permits calculation of
 precise probabilities in situation where, as a consequence of small cell
 frequencies, the much more rapid normal approximation and chi-square
