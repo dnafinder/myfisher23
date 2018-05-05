@@ -47,6 +47,7 @@ function Pvalue=myfisher23(x)
 % test on 2x3 matrix
 % http://www.mathworks.com/matlabcentral/fileexchange/15399
 
+
 %Input error handling
 p = inputParser;
 addRequired(p,'x',@(x) validateattributes(x,{'numeric'},{'real','finite','integer','nonnegative','nonnan','size',[2 3]}));
@@ -71,22 +72,23 @@ end
 
 %recall that Fisher's P=[Prod(Rs!)*Prod(Cs!)]/[N!*prod(X(i,j)!)]
 %Log(A*B)=Log(A)+Log(B) and Log(A/B)=Log(A)-Log(B)
-%Costruct all possible tables
+%Construct all possible tables
 %A 2x3 matrix has 2 degrees of freedom...
 A=0:1:min(Rs(1),Cs(1)); %all possible values of X(1,1)
 B=min(Cs(2),Rs(1)-A); %max value of X(1,2) given X(1,1)
-et=sum(B+ones(size(B))); %tables to evaluate
+C=max(Rs(1)-A-Cs(3),0); % min value of X(1,2) given X(1,1)
+et=sum(B-C+ones(size(B))); %tables to evaluate
 Tables=zeros(et,6); %Matrix preallocation
 %compute the index
-stop=cumsum(B+1);
+stop=cumsum(B-C+1);
 start=[1 stop(1:end-1)+1];
 %In the first round of the for cycle, Column 1 assignment should be skipped
 %because it is already zero. So, modify the cycle...
-Tables(start(1):stop(1),2)=0:1:B(1); %Put in the Column2 all the possible values of X(1,2) given X(1,1)
+Tables(start(1):stop(1),2)=C(1):1:B(1); %Put in the Column2 all the possible values of X(1,2) given X(1,1)
 for I=2:length(A)
-    Tables(start(I):stop(I),1)=A(I); %replicate the A(I) value for B(I)+1 times
+    Tables(start(I):stop(I),1)=A(I); %replicate the A(I) value for B(I)-C(I)+1 times
     %Put in the Column2 all the possible values of X(1,2) given X(1,1)
-    Tables(start(I):stop(I),2)=0:1:B(I); 
+    Tables(start(I):stop(I),2)=C(I):1:B(I); 
 end
 clear A B start stop
 %The degrees of freedom are finished, so complete the table...
